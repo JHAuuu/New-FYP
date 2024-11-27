@@ -1,0 +1,232 @@
+﻿body {
+    font-family: 'Nunito', sans-serif;
+    background-color: #f3eac4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.book-card {
+    background-color: white;
+    /*width: 80%;
+    max-width: 900px;*/
+    width: 100%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* Flexbox for book cover and details */
+.book-info {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.book-cover {
+    flex-basis: 25%;
+    margin-right: 20px;
+}
+
+    .book-cover img {
+        width: 100%;
+        border-radius: 5px;
+    }
+
+.book-details {
+    flex-basis: 70%;
+}
+
+.book-title {
+    font-size: 1.8em;
+    font-weight: 600;
+    margin: 0 0 10px;
+}
+
+.book-author {
+    font-size: 1.2em;
+    color: #0073b1;
+    margin-bottom: 10px;
+}
+
+.ratings {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+    .ratings span {
+        font-size: 1em;
+        margin-left: 8px;
+        color: #666;
+    }
+
+.book-summary {
+    line-height: 1.5;
+    font-size: 1.1em;
+    margin-bottom: 20px;
+}
+
+.category {
+    font-size: 0.9em;
+    color: #0073b1;
+    margin-bottom: 10px;
+}
+
+/* Editions section style */
+.editions {
+    width: 100%;
+    margin-top: 20px;
+}
+
+    .editions h3 {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+
+.top-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+    .top-section select {
+        padding: 5px;
+        font-size: 0.9em;
+    }
+
+    .top-section input[type="search"] {
+        padding: 5px;
+        font-size: 0.9em;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+.bookCopy-card {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.grid-header {
+    padding: 10px; /* Add padding to the header */
+}
+
+.bookCopyCover {
+    width: 40px;
+    border-radius: 5px;
+}
+
+.edition-title {
+    font-weight: 600;
+}
+
+.btn i {
+    padding: 11px 12px;
+    background-color: #0073b1;
+}
+
+.available .availability-button {
+    padding: 8px 12px;
+    background-color: #1da83d;
+    color: white; /* Ensure text is white */
+    border: none; /* Remove default button border */
+    border-radius: 4px; /* Rounded corners */
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.btn i,
+.unavailable .availability-button {
+    padding: 8px 12px;
+    background-color: #8390A2;
+    color: white; /* Ensure text is white */
+    border: none; /* Remove default button border */
+    border-radius: 4px; /* Rounded corners */
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.availability-button:hover {
+    opacity: 0.8; /* Add hover effect for feedback */
+}
+
+.pagination {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.add-book-button {
+    background-color: #1da83d;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.available button:hover,
+.buttons button:hover {
+    background-color: #22bf47;
+    transition: 300ms;
+}
+
+.btn i:hover {
+    background-color: #005f8a;
+    transition: 300ms;
+}
+
+.unavailable button:hover {
+    transition: 300ms;
+    background-color: #59626f;
+}
+
+.btn-contain {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 12px;
+    width: 100%;
+}
+
+.btn-book {
+    width: 100%;
+}
+
+.edit-button,
+.delete-button {
+    width: 49%;
+    padding: 5px 10px;
+    font-size: 14px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition */
+}
+
+.edit-button {
+    background-color: #007BFF; /* Blue */
+}
+
+.delete-button {
+    background-color: #DC3545; /* Red */
+}
+
+/* Hover effects */
+.edit-button:hover {
+    background-color: #0056b3; /* Darker blue */
+    transform: scale(1.05); /* Slightly enlarge the button */
+}
+
+.delete-button:hover {
+    background-color: #c82333; /* Darker red */
+    transform: scale(1.05); /* Slightly enlarge the button */
+}
+
