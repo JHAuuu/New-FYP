@@ -37,15 +37,13 @@ namespace fyp
                     }
                     if (!string.IsNullOrEmpty(Request.QueryString["date"]))
                     {
-                        rateDate = DateTime.Parse(Request.QueryString["date"]).Date.ToString("yyyy-MM-dd");
-                        string query = @"SELECT PatronId
-          ,BookId
-          ,RateComment
-          ,RateStarts
-          ,RateDate
-      FROM Rating
-    WHERE PatronId = @userId AND BookId = @bookId AND RateDate = @date
-";
+                        rateDate = DateTime.Parse(Request.QueryString["date"]).ToString("yyyy-MM-dd HH:mm:ss");
+                        string query = @"   SELECT PatronId, BookId, RateComment, RateStarts, RateDate
+    FROM Rating
+    WHERE PatronId = @userId
+    AND BookId = @bookId
+    AND CONVERT(VARCHAR(19), RateDate, 120) = @date";
+                        
                         DataTable dt = DBHelper.ExecuteQuery(query, new string[]{
 
                             "userId",userid.ToString(),
@@ -127,7 +125,7 @@ SET
     RateComment = @comment,
     RateStarts = @rating
 WHERE 
-    PatronId = @userId AND BookId = @bookId AND RateDate = @date";
+    PatronId = @userId AND BookId = @bookId AND CONVERT(VARCHAR(19), RateDate, 120) = @date";
 
                     int insertData = DBHelper.ExecuteNonQuery(query, new string[]{
                         "userId", userid.ToString(),
@@ -156,5 +154,11 @@ WHERE
         }
 
 
+
+        protected void btnRedirect_Click(object sender, EventArgs e)
+        {
+            // Redirect to LoanList.aspx
+            Response.Redirect("BookDetail.aspx?bookid="+ bookId);
+        }
     }
 }

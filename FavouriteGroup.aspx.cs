@@ -160,30 +160,32 @@ namespace fyp
                     "userid",userid.ToString()
                 });
 
-                bool nameCollision = true;
-
-                foreach (DataRow selectedRow in selectedDt.Rows)
-                {
-                    if(selectedRow["FavGrpName"].ToString() == name)
+              
+                    foreach (DataRow selectedRow in selectedDt.Rows)
                     {
-                        return "Choose Another Name";
-                    }
-                    else
-                    {
-                        nameCollision = false;
-                    }
-                }
-
-                if (!nameCollision)
-                {
-                    int insertedQuery = DBHelper.ExecuteNonQuery(insertQuery, new string[]
+                        if (selectedRow["FavGrpName"].ToString() == name)
                         {
+                            return "Choose Another Name";
+                        }
+                        
+                    }
+
+                int insertedQuery = DBHelper.ExecuteNonQuery(insertQuery, new string[]
+                          {
                             "name",name,
                             "userid",userid.ToString()
-                        });
+                          });
+
+                if (insertedQuery > 0)
+                {
+                    return "SUCCESS";
+                }
+                else
+                {
+                    return "Failed to create";
                 }
 
-                return "SUCCESS";
+
             }
             catch(Exception ex)
             {

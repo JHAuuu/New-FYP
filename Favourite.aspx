@@ -112,13 +112,14 @@
                         $.ajax({
                             url: 'Favourite.aspx/RemoveFromGroup',
                             type: 'POST',
-                            data: JSON.stringify({ groupId: groupId, favId: element.id }),
+                            data: JSON.stringify({ groupId: groupId, bookId: bookId }),
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             success: function (response) {
                                 if (response.d === "SUCCESS") {
                                     Swal.fire({ icon: 'success', title: 'Removed from group!', confirmButtonText: 'OK' });
                                     element.classList.toggle("active");
+                                    element.closest(".card").remove();
                                 } else {
                                     Swal.fire({ icon: 'error', title: 'Error', text: response.d, confirmButtonText: 'Try again' });
                                 }
@@ -129,13 +130,14 @@
                         $.ajax({
                             url: 'Favourite.aspx/RemoveFromAll',
                             type: 'POST',
-                            data: JSON.stringify({ favId: element.id }),
+                            data: JSON.stringify({ bookId: bookId  }),
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             success: function (response) {
                                 if (response.d === "SUCCESS") {
                                     Swal.fire({ icon: 'success', title: 'Removed from all', confirmButtonText: 'OK' });
                                     element.classList.toggle("active");
+                                    element.closest(".card").remove();
                                 } else {
                                     Swal.fire({ icon: 'error', title: 'Error', text: response.d, confirmButtonText: 'Try again' });
                                 }

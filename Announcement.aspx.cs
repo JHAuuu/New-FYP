@@ -15,9 +15,9 @@ namespace fyp
         {
             if (!IsPostBack)
             {
-                if (Session["PatronId"] != null)
+                if (Session["UserId"] != null)
                 {
-                    userid = Convert.ToInt32(Session["PatronId"].ToString());
+                    userid = Convert.ToInt32(Session["UserId"].ToString());
                 }
 
 

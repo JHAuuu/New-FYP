@@ -25,14 +25,10 @@ namespace fyp
                     string userName = identity.FindFirst(ClaimTypes.Name)?.Value;
 
                     // Store user details in Session for further use (optional)
-                    Session["userId"] = userId;
+                    Session["UserId"] = userId;
                     Session["UserRole"] = userRole;
                     Session["UserName"] = userName;
 
-                    if (!string.IsNullOrEmpty(userId) && int.TryParse(userId, out int parsedUserId))
-                    {
-                        userid = parsedUserId;
-                    }
 
                     // Check the role and hide the dropdown if not Admin or Staff
                     if (userRole != "Admin" && userRole != "Staff")
@@ -65,16 +61,16 @@ namespace fyp
         {
             try
             {
-                if (!String.IsNullOrEmpty(Session["PatronId"].ToString()))
+                if (Session["UserId"] != null && !String.IsNullOrEmpty(Session["UserId"].ToString()))
                 {
-                    string userid = Session["PatronId"].ToString();
+                    string userid = Session["UserId"].ToString();
                     string query = @"SELECT COUNT(*) AS TotalItems
 FROM (
     SELECT 
         i.InboxId AS ItemId
     FROM Inbox i
     LEFT JOIN InboxStatus s ON i.InboxId = s.InboxId AND i.UserId = s.UserId
-    WHERE i.UserId = @userId
+    WHERE i.UserId = @userId AND s.[Read] = 'false'
 
     UNION ALL
 
@@ -82,7 +78,7 @@ FROM (
         a.AnnouncementId AS ItemId
     FROM Announcement a
     LEFT JOIN AnnouncementStatus s ON a.AnnouncementId = s.AnnouncementId
-    WHERE s.UserId = @userId
+    WHERE s.UserId = @userId AND s.[Read] = 'false'
 ) AS CombinedItems;";
 
                     int getTotalNoti = Convert.ToInt32(DBHelper.ExecuteScalar(query, new string[]{

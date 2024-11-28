@@ -227,3 +227,87 @@
         color: black;
         
     }
+
+
+.info-item {
+    margin-bottom: 10px;
+    padding: 5px;
+    background-color: #f1f1f1;
+    border-left: 3px solid #007bff;
+}
+
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+    .row.history-link {
+        justify-content: center;
+        /* Horizontally center the content */
+        align-items: center;
+        /* Vertically center the content */
+    }
+
+.history-link {
+    justify-content: center;
+    /* Horizontally center the content */
+    align-items: center;
+}
+
+
+.recommend-section {
+    display: flex;
+    flex-direction: column; /* Arrange buttons vertically */
+    align-items: center; /* Center-align buttons */
+    gap: 10px; /* Space between buttons */
+    margin-right: 20px; /* Creates a gap with the book image */
+}
+
+.btn-recommend {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: default;
+    border-radius: 5px;
+    transition: transform 0.2s, background-color 0.3s;
+    color: white;
+    background-color: #6c757d; /* Default gray color */
+    gap: 5px; /* Adds space between icon and count */
+}
+
+    .btn-recommend i {
+        font-size: 1.2em;
+    }
+
+.btnRecommendUp {
+    background-color: #28a745; /* Green for upvotes */
+}
+
+.btnRecommendDown {
+    background-color: #dc3545; /* Red for downvotes */
+}
+.btnRecommendUp:hover {
+    background-color: #28a745; /* Green for upvotes */
+}
+
+.btnRecommendDown:hover {
+    background-color: #dc3545; /* Red for downvotes */
+}
+
+
+.recommend-count {
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 5px; /* Adjust spacing between icon and count */
+}
+
+.btn-recommend:disabled {
+    background-color: #b2b2b2; /* Gray for disabled state */
+    cursor: not-allowed;
+}

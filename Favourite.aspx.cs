@@ -167,16 +167,25 @@ namespace fyp
         }
 
         [System.Web.Services.WebMethod(Description = "Remove Favourite from group")]
-        public static string RemoveFromGroup(string groupId, string favId)
+        public static string RemoveFromGroup(string groupId, string bookId)
         {
             try
             {
+
+                string getfavId = @"SELECT FavId FROM Favourite WHERE BookId = @bookId AND PatronId = @userid";
+                int favId = Convert.ToInt32(DBHelper.ExecuteScalar(getfavId, new string[]
+                {
+                    "bookId", bookId,
+                    "userid",userid.ToString()
+                }));
+
+
                 if (!string.IsNullOrEmpty(groupId))
                 {
                     string query = @"DELETE FROM FavouriteGrouping WHERE FavId = @favId AND FavGrpId = @groupId";
                     int removeGrouping = DBHelper.ExecuteNonQuery(query, new string[]
                     {
-                    "favId", favId,
+                    "favId", favId.ToString(),
                     "groupId", groupId
                     });
 
@@ -194,7 +203,7 @@ namespace fyp
                     string queryGrouping = @"DELETE FROM FavouriteGrouping WHERE FavId = @favId";
                     int removeGrouping = DBHelper.ExecuteNonQuery(queryGrouping, new string[]
                     {
-                    "favId", favId
+                    "favId", favId.ToString()
                     });
 
                     if (removeGrouping > 0)
@@ -202,7 +211,7 @@ namespace fyp
                         string queryFav = @"DELETE FROM Favourite WHERE FavId = @favId";
                         int removeFav = DBHelper.ExecuteNonQuery(queryFav, new string[]
                         {
-                    "favId", favId
+                    "favId", favId.ToString()
                         });
 
                         if (removeFav > 0)
@@ -223,26 +232,35 @@ namespace fyp
 
             } catch (Exception ex)
             {
-                return "Error Removing";
+                return $"Error: {ex.Message}";
             }
         }
 
         [System.Web.Services.WebMethod(Description = "Remove From Favourite")]
-        public static string RemoveFromAll(string favId)
+        public static string RemoveFromAll(string bookId)
         {
             try
             {
+                string getfavId = @"SELECT FavId FROM Favourite WHERE BookId = @bookId AND PatronId = @userid";
+                int favId = Convert.ToInt32(DBHelper.ExecuteScalar(getfavId, new string[]
+                {
+                    "bookId", bookId,
+                    "userid",userid.ToString()
+                }));
+
+
+
                 string queryGrouping = @"DELETE FROM FavouriteGrouping WHERE FavId = @favId";
                 int removeGrouping = DBHelper.ExecuteNonQuery(queryGrouping, new string[]
                 {
-                    "favId", favId
+                    "favId", favId.ToString()
                 });
 
 
                 string queryFav = @"DELETE FROM Favourite WHERE FavId = @favId";
                 int removeFav = DBHelper.ExecuteNonQuery(queryFav, new string[]
                 {
-                    "favId", favId
+                    "favId", favId.ToString()
                 });
 
                 if (removeFav > 0)

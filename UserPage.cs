@@ -26,7 +26,7 @@ namespace fyp
                 string userName = identity.FindFirst(ClaimTypes.Name)?.Value;
 
                 // Store user details in Session for further use (optional)
-                Session["userId"] = userId;
+                Session["UserId"] = userId;
                 Session["UserRole"] = userRole;
                 Session["UserName"] = userName;
             }

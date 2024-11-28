@@ -61,9 +61,9 @@
             padding: 20px 45px 20px 20px;
         }
 
-        .input-box input::placeholder, .input-box .asp-textbox::placeholder {
-             color: #fff;
-        }
+            .input-box input::placeholder, .input-box .asp-textbox::placeholder {
+                color: #fff;
+            }
 
         .input-box i {
             position: absolute;
@@ -80,22 +80,22 @@
             margin: -15px 0 15px;
         }
 
-        .wrapper .remember-forgot label {
-           color: #fff;
-        }
+            .wrapper .remember-forgot label {
+                color: #fff;
+            }
 
-        .wrapper .remember-forgot label input[type="checkbox"] {
-            margin-right: 3px;
-        }
+                .wrapper .remember-forgot label input[type="checkbox"] {
+                    margin-right: 3px;
+                }
 
         .remember-forgot a {
             color: #fff;
             text-decoration: none;
         }
 
-        .remember-forgot a:hover {
-             text-decoration: underline;
-        }
+            .remember-forgot a:hover {
+                text-decoration: underline;
+            }
 
         .wrapper .btn {
             width: 100%;
@@ -117,14 +117,32 @@
             font-weight: 600;
         }
 
-        .register-link p a:hover {
-            text-decoration: underline;
-        }
+            .register-link p a:hover {
+                text-decoration: underline;
+            }
 
         input:-webkit-autofill,
         input:-webkit-autofill:focus {
             transition: background-color 0s 600000s, color 0s 600000s !important;
         }
+
+        .home-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .home-link-anchor {
+            color: blanchedalmond;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+
+            .home-link-anchor:hover {
+                color: white; /* Change text color on hover */
+                text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.7); /* Add glow effect */
+                text-decoration: underline; /* Optional underline effect */
+            }
     </style>
 </head>
 <body>
@@ -137,47 +155,52 @@
             </div>
             <div class="input-box">
                 <asp:TextBox placeholder="Password" ID="txtPass" runat="server" BorderColor="#FFFFFF" BorderStyle="Solid" BorderWidth="2px" TextMode="Password"></asp:TextBox>
-
                 <i class='bx bxs-lock-alt'></i>
             </div>
 
             <div class="remember-forgot">
-                <label><asp:CheckBox ID="chbRemember" runat="server" />Remember Me</label>
+                <label>
+                    <asp:CheckBox ID="chbRemember" runat="server" />Remember Me</label>
                 <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/ForgetPassword.aspx">Forgot Password?</asp:HyperLink>
             </div>
             <asp:Button ID="btnLogin" class="btn" runat="server" Text="Login" OnClick="btnLogin_Click" />
-             <div class="register-link">
-                <p>Don't have an account?
-                    <asp:HyperLink ID="hlReg" runat="server" Text="Register" NavigateUrl="~/Register.aspx"/>
-            </div> 
-
-            <asp:Label ID="MessageBox" runat="server" ForeColor="Red"></asp:Label>
+            <div class="register-link">
+                <p>
+                    Don't have an account?
+                   
+                    <asp:HyperLink ID="hlReg" runat="server" Text="Register" NavigateUrl="~/Register.aspx" />
+            </div>
+            <div class="home-link">
+                <a href="Home.aspx" class="home-link-anchor">Back to Home</a>
+            </div>
+            <asp:HiddenField ID="lockDurationHiddenField" runat="server" />
+<asp:Label ID="MessageBox" runat="server" ForeColor="Red"></asp:Label>
         </form>
     </div>
 </body>
 </html>
 <script type="text/javascript">
-    // Check if unlockTime is set (from the server-side script)
-    if (typeof unlockTime !== 'undefined') {
-        // Initialize countdown
-        const countdownElement = document.getElementById("MessageBox");
-        
-        function updateCountdown() {
-            const now = new Date();
-            const timeRemaining = unlockTime - now;
+    // Get the remaining lock time from the hidden field
+    const lockDuration = parseInt(document.getElementById('<%= lockDurationHiddenField.ClientID %>').value, 10);
 
-            if (timeRemaining <= 0) {
-                countdownElement.innerText = "Your account has been unlocked.";
-                clearInterval(countdownInterval);  // Stop the timer
-            } else {
-                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-                countdownElement.innerText = "Your account has been locked for 5 minutes. It will automatically unlock in " +
-                                              `${minutes} minutes and ${seconds} seconds.`;
+    if (!isNaN(lockDuration) && lockDuration > 0) {
+        const countdownElement = document.getElementById("MessageBox");
+
+        function updateCountdown(secondsRemaining) {
+            if (secondsRemaining <= 0) {
+                countdownElement.innerText = "Your account has been unlocked. Please try logging in again.";
+                return;
             }
+
+            const minutes = Math.floor(secondsRemaining / 60);
+            const seconds = secondsRemaining % 60;
+            countdownElement.innerText = `Your account is locked. It will unlock in ${minutes} minute(s) and ${seconds} second(s).`;
+
+            // Schedule the next update
+            setTimeout(() => updateCountdown(secondsRemaining - 1), 1000);
         }
 
-        // Update countdown every second
-        const countdownInterval = setInterval(updateCountdown, 1000);
+        // Start the countdown
+        updateCountdown(lockDuration);
     }
 </script>

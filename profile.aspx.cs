@@ -65,7 +65,7 @@ WHERE u.UserName = @username;";
                 {
                     // Show the <p> element for EduLvl and set the value
                     infoEdu.Visible = true;
-                    lblEduLvl.Text = dt.Rows[0]["EduLvl"] != DBNull.Value ? dt.Rows[0]["EduLvl"].ToString() : "N/A";
+                    lblEduLvl.Text = dt.Rows[0]["RoleSpecificInfo"] != DBNull.Value ? dt.Rows[0]["RoleSpecificInfo"].ToString() : "N/A";
                 }
             }
             else

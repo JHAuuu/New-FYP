@@ -78,6 +78,15 @@ namespace fyp
         protected global::System.Web.UI.WebControls.Label lblDesc;
 
         /// <summary>
+        /// pnlComment control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlComment;
+
+        /// <summary>
         /// rptComment control.
         /// </summary>
         /// <remarks>
@@ -85,6 +94,15 @@ namespace fyp
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptComment;
+
+        /// <summary>
+        /// pnlRelatedBook control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlRelatedBook;
 
         /// <summary>
         /// rptRelatedBook control.

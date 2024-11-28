@@ -122,19 +122,31 @@ WHERE
                         DateTime endDate = DateTime.Parse(GetSafeValue(row, "EndDate"));
                         int daysDifference = (endDate - startDate).Days;
 
+                        if (daysDifference <= 7)
+                        {
+                            pnlExtendDate.Visible = true;
+                        }
+                        else
+                        {
+                            pnlExtendDate.Visible = false;
+                        }
+
                         if (daysDifference >= 0)
                         {
                             lblDaysLeftToReturn.Text = $"{Math.Abs(daysDifference)} days left to return";
                             pnlDaysLeftToReturn.Visible = true;
+                            
                         }
                         else
                         {
                             pnlDaysLeftToReturn.Visible = false;
+                           
                         }
                     }
                     else
                     {
                         pnlDaysLeftToReturn.Visible = false;
+                        pnlExtendDate.Visible = false;
                     }
 
                     string recommendedValue = GetSafeValue(row, "Recommended");
@@ -162,9 +174,10 @@ WHERE
                     {
                         pnlComment.Visible = false;
                     }
-                    
 
-                    imgBook.ImageUrl = ImageHandler.GetImage((byte[])row["BookCopyImage"]);
+
+
+                    imgBook.ImageUrl = row["BookCopyImage"] != DBNull.Value ? ImageHandler.GetImage((byte[])row["BookCopyImage"]) : "images/defaultCoverBook.png";
 
                     
 
@@ -177,6 +190,67 @@ WHERE
                 
             }
         }
+
+        [System.Web.Services.WebMethod(Description = "Update Date")]
+        public static string ExtendDate(string loanId)
+        {
+            try
+            {
+                string getDateDuery = "SELECT StartDate, EndDate FROM Loan WHERE LoanId = @loanId";
+                DataTable dt = DBHelper.ExecuteQuery(getDateDuery, new string[]{
+                    "loanId", loanId
+                });
+
+                if (dt.Rows.Count > 0)
+                {
+                    // Step 2: Convert StartDate and EndDate to DateTime
+                    DateTime startDate = Convert.ToDateTime(dt.Rows[0]["StartDate"]).Date;
+                    DateTime endDate = Convert.ToDateTime(dt.Rows[0]["EndDate"]).Date;
+
+                    // Step 3: Compare dates to check if remaining days are 7 or fewer
+                    int daysLeft = (endDate - startDate).Days;
+
+                    if (daysLeft <= 7)
+                    {
+                        // Step 4: Add 7 days to EndDate
+                        DateTime newEndDate = endDate.AddDays(7);
+
+                        // Step 5: Update query to set the new EndDate
+                        string updateQuery = "UPDATE Loan SET EndDate = @newEndDate WHERE LoanId = @loanId";
+
+                        // Execute the update query
+                        int updateSuccess = DBHelper.ExecuteNonQuery(updateQuery, new string[]
+                        {
+                "newEndDate", newEndDate.ToString("yyyy-MM-dd"),
+                "loanId", loanId
+                        });
+
+                        if (updateSuccess > 0)
+                        {
+                            return "SUCCESS";
+                        }
+                        else
+                        {
+                            return "Failed to Extend Date";
+                        }
+                    }
+                    else
+                    {
+                        return "You already extended the date or you choosing longer than 7 days.";
+                    }
+                }
+                else
+                {
+                    return "There is no such data";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return $"Error: {ex.Message}";
+            }
+        }
+
 
         [System.Web.Services.WebMethod(Description = "Book Recommended")]
         public static void bookRecommended()

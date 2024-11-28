@@ -70,7 +70,7 @@
                         <ItemTemplate>
                            
                             <div class="col-12" style="border-radius: 10px; border: 1px solid #ccc; padding: 10px;">
-                                <img src="<%# Eval("BookCopyImage")%>" width="100" alt="Books" />
+                                <img src="<%# Eval("BookCopyImage") != DBNull.Value ? Eval("BookCopyImage") : "images/defaultCoverBook.png" %>" width="100" alt="Books" />
                                 <h4><%# Eval("BookTitle") %></h4>
                                 <p>
                                     ISBN : <%# Eval("ISBN") %>
@@ -123,7 +123,7 @@
                         <asp:Repeater runat="server" ID="rptLoan">
                             <ItemTemplate>
                                 <div class="history-item">
-                                    <img src="images/bookimg2.jpg" width="150" alt="" />
+                                    <img src="<%# Eval("BookCopyImage") != DBNull.Value ? Eval("BookCopyImage") : "images/defaultCoverBook.png" %>" width="150" alt="" />
                                     <div class="time"><%# (DateTime.Parse(Eval("EndDate").ToString()) - DateTime.Parse(Eval("StartDate").ToString())).Days + " days left" %></div>
                                     <div class="details">
                                         <div class="book-title"><%# Eval("BookTitle")%></div>
@@ -134,6 +134,8 @@
                                     </div>
                                     <div class="view-detail">
                                         <button style="width: 125px; padding: 5px 10px; margin-right: 20px;" onclick="window.location.href = 'LoanDetail.aspx?LoanId=<%# Eval("LoanId") %>';">View Detail</button>
+                                        <%-- Add the Extend Date button conditionally --%>
+                 <%# ShowExtendDateButton(Eval("StartDate"), Eval("EndDate"), Eval("LoanId")) %>
                                     </div>
                                 </div>
                             </ItemTemplate>
@@ -178,6 +180,38 @@
                 success: function (response) {
                     if (response.d === "SUCCESS") {
                         window.location.href = "LoanBook.aspx";
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Loan Failed',
+                            text: response.d,
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                }
+            });
+        }
+
+        function extendDate(loanId) {
+
+            // AJAX to check trust level
+            $.ajax({
+                url: 'LoanList.aspx/ExtendDate',
+                type: 'POST',
+                data: JSON.stringify({ loanId: loanId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.d === "SUCCESS") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Date Extended',
+                            text: 'You have extended successfully',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            // Reload the page after the success message is closed
+                            location.reload();
+                        });
                     } else {
                         Swal.fire({
                             icon: 'error',

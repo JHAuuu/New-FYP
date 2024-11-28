@@ -26,10 +26,7 @@ namespace fyp
                         rptLoan.DataSource = getLoan;
                         rptLoan.DataBind();
                     }
-                    else
-                    {
-                        
-                    }
+                   
                 }
                 else
                 {
@@ -65,7 +62,7 @@ INNER JOIN
     Book ON BookCopy.BookId = Book.BookId
 WHERE 
     Loan.PatronId = @userId
-    AND (Loan.Status = 'returned');
+    AND Loan.Status = 'returned'
 AND Loan.LatestReturn IS NOT NULL";
                 DataTable originalDt = DBHelper.ExecuteQuery(query, new string[]{
                     "userId", userid.ToString()

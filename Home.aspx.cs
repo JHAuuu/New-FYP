@@ -14,6 +14,12 @@ namespace fyp
         public static int userid = 0;
         protected void Page_Load(object sender, EventArgs e)
         {
+            DataTable getbook = getRandomBooks();
+            if (getbook.Rows.Count > 0)
+            {
+                rptBook.DataSource = getbook;
+                rptBook.DataBind();
+            }
             if (!IsPostBack)
             {
                 if (User.Identity.IsAuthenticated)
@@ -70,16 +76,16 @@ namespace fyp
         {
             try
             {
-                if (!String.IsNullOrEmpty(Session["PatronId"].ToString()))
+                if (Session["UserId"] != null && !String.IsNullOrEmpty(Session["UserId"].ToString()))
                 {
-                    string userid = Session["PatronId"].ToString();
+                    string userid = Session["UserId"].ToString();
                     string query = @"SELECT COUNT(*) AS TotalItems
 FROM (
     SELECT 
         i.InboxId AS ItemId
     FROM Inbox i
     LEFT JOIN InboxStatus s ON i.InboxId = s.InboxId AND i.UserId = s.UserId
-    WHERE i.UserId = @userId
+    WHERE i.UserId = @userId AND s.[Read] = 'false'
 
     UNION ALL
 
@@ -87,7 +93,7 @@ FROM (
         a.AnnouncementId AS ItemId
     FROM Announcement a
     LEFT JOIN AnnouncementStatus s ON a.AnnouncementId = s.AnnouncementId
-    WHERE s.UserId = @userId
+    WHERE s.UserId = @userId AND s.[Read] = 'false'
 ) AS CombinedItems;";
 
                     int getTotalNoti = Convert.ToInt32(DBHelper.ExecuteScalar(query, new string[]{
@@ -116,13 +122,10 @@ FROM (
             {
                 string query = @"SELECT TOP 10 b.BookId, b.BookTitle, b.BookImage, b.BookDesc
 FROM Book b
-GROUP BY b.BookId, b.BookTitle, b.BookDesc, b.BookSeries, b.BookImage
 ORDER BY NEWID(); 
 ";
 
-                DataTable originalDt = DBHelper.ExecuteQuery(query, new string[]{
-                    
-                });
+                DataTable originalDt = DBHelper.ExecuteQuery(query, new string[] { });
 
 
                 return originalDt;

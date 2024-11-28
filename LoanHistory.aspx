@@ -21,7 +21,7 @@
 
     <asp:Panel runat="server" ID="loanEmptyMessage" Visible="false">
         <div class="no-data-message">
-            <p>No punishments available at the moment.</p>
+            <p>No loaned record at the moment.</p>
         </div>
     </asp:Panel>
 

@@ -354,6 +354,8 @@
     <Content Include="profile.aspx" />
     <Content Include="profileChangePass.aspx" />
     <Content Include="Recommendation.aspx" />
+    <Content Include="RecommendByUsers.aspx" />
+    <Content Include="RecommendForUser.aspx" />
     <Content Include="Register.aspx" />
     <Content Include="ReturnBookManagement.aspx" />
     <Content Include="ReturnHistory.aspx" />
@@ -519,6 +521,20 @@
     </Compile>
     <Compile Include="profileChangePass.aspx.designer.cs">
       <DependentUpon>profileChangePass.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RecommendByUsers.aspx.cs">
+      <DependentUpon>RecommendByUsers.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RecommendByUsers.aspx.designer.cs">
+      <DependentUpon>RecommendByUsers.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RecommendForUser.aspx.cs">
+      <DependentUpon>RecommendForUser.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RecommendForUser.aspx.designer.cs">
+      <DependentUpon>RecommendForUser.aspx</DependentUpon>
     </Compile>
     <Compile Include="Register.aspx.cs">
       <DependentUpon>Register.aspx</DependentUpon>

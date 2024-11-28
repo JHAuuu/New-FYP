@@ -12,7 +12,7 @@ namespace fyp
     {
         static int userid = 0;
         public int userTrustValue = 0;
-        public string userTrustLevel = "You can only borrow ";
+        public string userTrustLevel = "";
         public static decimal totalFine;
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -171,22 +171,29 @@ WHERE PatronId = @userId
                     // Access the values as needed
                     int trustId = Convert.ToInt32(dtRow["TrustId"]);
                     userTrustValue = Convert.ToInt32(dtRow["TrustScore"]);
-                    if(dtRow["TrustLvl"].ToString() == "High")
-                    {
-                        userTrustLevel += "3 ";
-                    }
-                    else if(dtRow["TrustLvl"].ToString() == "Medium")
-                    {
-                        userTrustLevel += "2 ";
-                    }else if(dtRow["TrustLvl"].ToString() == "Low")
-                    {
-                        userTrustLevel += "1 ";
-                    }else 
-                    {
-                        userTrustLevel = "You are not trusted below the 80 credit trust, you are not allowed to borrow a single book";
-                    }
-                    userTrustLevel += "books on " + dtRow["TrustLvl"].ToString() + " trust level";
+                    
 
+                    if (userTrustValue >= 80 && userTrustValue < 90)
+                    {
+                        userTrustLevel = $"You can only have 1 book to borrow on trust of {userTrustValue} credit.";
+
+                    }
+                    else if (userTrustValue >= 90 && userTrustValue < 100)
+                    {
+                        userTrustLevel = $"You can only have 2 book to borrow on trust of {userTrustValue} credit.";
+                    }
+                    else if (userTrustValue >= 100 && userTrustValue < 120)
+                    {
+                        userTrustLevel = $"You can only have 3 book to borrow on trust of {userTrustValue} credit.";
+                    }
+                    else if (userTrustValue == 120)
+                    {
+                        userTrustLevel = $"You can only have 5 book to borrow on trust of {userTrustValue} credit.";
+                    }
+                    else
+                    {
+                        userTrustLevel = $"You are not trusted below the 80 credit trust, you are not allowed to borrow a single book on trust of  {userTrustValue} credit.";
+                    }
                 }
 
 
@@ -401,6 +408,67 @@ AND CAST(GETDATE() AS DATE) > CAST(EndDate AS DATE);
             }
         }
 
+
+        [System.Web.Services.WebMethod(Description = "Update Date")]
+        public static string ExtendDate(string loanId)
+        {
+            try
+            {
+                string getDateDuery = "SELECT StartDate, EndDate FROM Loan WHERE LoanId = @loanId";
+                DataTable dt = DBHelper.ExecuteQuery(getDateDuery, new string[]{
+                    "loanId", loanId
+                });
+
+                if (dt.Rows.Count > 0)
+                {
+                    // Step 2: Convert StartDate and EndDate to DateTime
+                    DateTime startDate = Convert.ToDateTime(dt.Rows[0]["StartDate"]).Date;
+                    DateTime endDate = Convert.ToDateTime(dt.Rows[0]["EndDate"]).Date;
+
+                    // Step 3: Compare dates to check if remaining days are 7 or fewer
+                    int daysLeft = (endDate - startDate).Days;
+
+                    if (daysLeft <= 7)
+                    {
+                        // Step 4: Add 7 days to EndDate
+                        DateTime newEndDate = endDate.AddDays(7);
+
+                        // Step 5: Update query to set the new EndDate
+                        string updateQuery = "UPDATE Loan SET EndDate = @newEndDate WHERE LoanId = @loanId";
+
+                        // Execute the update query
+                        int updateSuccess = DBHelper.ExecuteNonQuery(updateQuery, new string[]
+                        {
+                "newEndDate", newEndDate.ToString("yyyy-MM-dd"),
+                "loanId", loanId
+                        });
+
+                        if (updateSuccess > 0)
+                        {
+                            return "SUCCESS";
+                        }
+                        else
+                        {
+                            return "Failed to Extend Date";
+                        }
+                    }
+                    else
+                    {
+                        return "You already extended the date or you choosing longer than 7 days.";
+                    }
+                }
+                else
+                {
+                    return "There is no such data";
+                }
+                        
+            }
+            catch(Exception ex)
+            {
+                return $"Error: {ex.Message}";
+            }
+        }
+
         [System.Web.Services.WebMethod(Description = "Check Trustworthy")]
         public static string checkTrustLevel()
         {
@@ -453,7 +521,7 @@ AND CAST(GETDATE() AS DATE) > CAST(EndDate AS DATE);
                         return "You cannot borrow more than 2 books on " + userScore.ToString() + " trust credit";
                     }
                 }
-                else if (userScore == 100)
+                else if (userScore >= 100 && userScore < 120)
                 {
                     if (userLoanNum < 3)
                     {
@@ -462,6 +530,16 @@ AND CAST(GETDATE() AS DATE) > CAST(EndDate AS DATE);
                     else
                     {
                         return "You cannot borrow more than 3 books on " + userScore.ToString() + " trust credit";
+                    }
+                }else if (userScore == 120)
+                {
+                    if (userLoanNum < 5)
+                    {
+                        return "SUCCESS";
+                    }
+                    else
+                    {
+                        return "You cannot borrow more than 5 books on " + userScore.ToString() + " trust credit";
                     }
                 }
                 else
@@ -547,7 +625,27 @@ WHERE LoanId IN (
 
                 if(updatePunish > 0)
                 {
-                    return "SUCCESS";
+                    string scoreQuery = @"UPDATE T
+SET T.TrustScore = 
+    CASE 
+        WHEN (T.TrustScore / 2) + 50 > 100 THEN 100 
+        ELSE (T.TrustScore / 2) + 50                 
+    END
+FROM [fypDatabase].[dbo].[Trustworthy] T
+WHERE T.PatronId = @userId;";
+
+                    int updateScore = DBHelper.ExecuteNonQuery(scoreQuery, new string[] {
+                    "userId", userid.ToString()
+                });
+                    if(updateScore > 0)
+                    {
+                        return "SUCCESS";
+                    }
+                    else
+                    {
+                        return "Fail to add score";
+                    }
+                    
                 }
                 else
                 {
@@ -558,6 +656,33 @@ WHERE LoanId IN (
             {
                 return "Something went wrong";
             }
+        }
+
+        protected string ShowExtendDateButton(object startDateObj, object endDateObj, object loanIdObj)
+        {
+            try
+            {
+                // Safely parse StartDate and EndDate to DateTime
+                DateTime startDate = Convert.ToDateTime(startDateObj).Date;
+                DateTime endDate = Convert.ToDateTime(endDateObj).Date;
+
+                // Calculate the remaining days
+                var daysLeft = (endDate - startDate).Days;
+
+                // Check if the button should be displayed
+                if (daysLeft <= 7 && loanIdObj != null)
+                {
+                    return $"<button style='width: 125px; padding: 5px 10px;' onclick=\"extendDate('{loanIdObj}')\">Extend Date</button>";
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it appropriately
+                // For debugging:
+                throw new InvalidOperationException("Error generating Extend Date button", ex);
+            }
+
+            return string.Empty;
         }
     }
 }

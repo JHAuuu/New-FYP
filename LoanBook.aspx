@@ -24,19 +24,24 @@
 </div>
                 <!--Body Content-->
                 <div class="form-container">
-                    <form action="#">
+                    <form action="#" runat="server">
 
                             <div class="form-field">
                                 <label for="end-date">Return Date:</label>
                                 <input type="date" id="end-date" name="end-date">
                             </div>
                             <div class="form-submit">
-                                <button type="submit" id="send-button" onclick="loanBook(event)" disabled>Loan</button>
+                                <button type="submit" id="send-button"
+                                    style="width:125px;height:50px;"
+                                    onclick="loanBook(event)" disabled>Loan</button>
                             
                             </div>
                             <div class="form-submit">
                          
-                                <button type="button" style="background-color: gray;margin-top: 10px;" onclick="window.location.href = 'LoanList.apsx'">Cancel</button>
+                                <asp:Button ID="btnRedirect" 
+                                    style="background-color: gray;margin-top: 10px; font-size: 16px;" 
+                                    runat="server" Text="Cancel" OnClick="btnRedirect_Click" />
+
                             </div>
                         
 

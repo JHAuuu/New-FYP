@@ -37,6 +37,11 @@ namespace fyp
                     {
                         rptComment.DataSource = cmtDt;
                         rptComment.DataBind();
+                        pnlComment.Visible = false;
+                    }
+                    else
+                    {
+                        pnlComment.Visible = true;
                     }
 
                     DataTable relatedBookDt = getRelatedBooks();
@@ -44,6 +49,11 @@ namespace fyp
                     {
                         rptRelatedBook.DataSource = relatedBookDt;
                         rptRelatedBook.DataBind();
+                        pnlRelatedBook.Visible = false;
+                    }
+                    else
+                    {
+                        pnlRelatedBook.Visible = true;
                     }
 
                     isFavorite = getFavBook();
@@ -68,9 +78,6 @@ namespace fyp
     b.BookDesc, 
     b.BookSeries, 
     b.BookImage, 
-    COUNT(CASE WHEN 
-                     (l.LoanId IS NULL OR l.Status = 'returned' OR l.StartDate > GETDATE() OR l.EndDate < GETDATE() ) THEN 1 END) AS AvailableCopies,
-    COUNT(bc.BookCopyId) AS TotalCopies,
     -- Nested subquery for Authors
     (SELECT STRING_AGG(a.AuthorName, ', ') 
      FROM BookAuthor ba 
@@ -83,10 +90,8 @@ namespace fyp
      WHERE bcg.BookId = b.BookId) AS Categories
 FROM 
     Book AS b
-JOIN 
-    BookCopy AS bc ON b.BookId = bc.BookId
 LEFT JOIN 
-    Loan l ON bc.BookCopyId = l.BookCopyId AND (l.Status = 'loaning') 
+    BookCopy AS bc ON b.BookId = bc.BookId
 WHERE 
     b.BookId = @bookId
 GROUP BY 
@@ -117,7 +122,7 @@ GROUP BY
                     }
                     else
                     {
-                        imgBook.ImageUrl = DBNull.Value.ToString();
+                        imgBook.ImageUrl = "images/defaultCoverBook.png";
                     }
                 }
 
@@ -324,6 +329,48 @@ ORDER BY NEWID();
             }
         }
 
+
+        [System.Web.Services.WebMethod(Description = "Delete comment")]
+        public static string DeleteComment(string bookId, string patronId, string date)
+        {
+            try
+            {
+                string rateDate = DateTime.Parse(date).ToString("yyyy-MM-dd HH:mm:ss");
+
+
+                string query = @"
+ DELETE FROM Rating
+            WHERE 
+                PatronId = @userId 
+                AND BookId = @bookId 
+                AND CONVERT(VARCHAR(19), RateDate, 120) = @date";
+
+                int rowsAffected = DBHelper.ExecuteNonQuery(query, new string[]{
+                        "userId", patronId,   // patronId passed as the parameter
+            "bookId", bookId,     // bookId passed as the parameter
+            "date", rateDate
+                    });
+
+                    if (rowsAffected > 0)
+                    {
+                        return "SUCCESS";
+                    }
+                    else
+                    {
+                        return "Failed to update";
+                    }
+                
+
+
+
+            }
+            catch (Exception ex)
+            {
+                return $"Error: {ex.Message}";
+            }
+        }
+
+
         [System.Web.Services.WebMethod(Description = "Add to Groups")]
         public static string AddToGroups( List<string> groupIds)
         {
@@ -372,6 +419,8 @@ ORDER BY NEWID();
                 return "ERROR: " + ex.Message;
             }
         }
+
+
 
 
         public void storeHistory()

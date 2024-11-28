@@ -17,6 +17,11 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <form id="form1" runat="server">
     <div class="container">
+        <div class="row history-link">
+                            <div class="history-link"><a href="Recommendation.aspx">Recomendation By User Preferences</a></div>
+                            <div class="history-link"><a href="RecommendByUsers.aspx">Recommenadtion By Others User</a></div>
+                                       <div class="history-link"><a href="RecommendForUser.aspx">Recommenadtion For User</a></div>
+                        </div>
         <header>
             <h2><a href="#">Recommendation</a></h2>
         </header>
@@ -39,7 +44,7 @@
                     <div class="book-item">
                 <div class="book-details">
                     <div class="book-image">
-                        <img src='<%# Eval("BookImage") %>' alt="Book Cover">
+                        <img src='<%# Eval("BookImage") != DBNull.Value ? Eval("BookImage"): "images/defaultCoverBook.png"  %> ' alt="Book Cover">
                     </div>
                    <div class="book-info">
                     <a href="BookDetail.aspx">

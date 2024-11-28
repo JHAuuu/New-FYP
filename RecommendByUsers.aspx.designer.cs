@@ -11,52 +11,34 @@ namespace fyp
 {
 
 
-    public partial class Home
+    public partial class RecommendByUsers
     {
 
         /// <summary>
-        /// AccDropdown control.
+        /// pnlBooks control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl AccDropdown;
+        protected global::System.Web.UI.WebControls.Panel pnlBooks;
 
         /// <summary>
-        /// DashDropdown control.
+        /// rptBooks control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl DashDropdown;
+        protected global::System.Web.UI.WebControls.Repeater rptBooks;
 
         /// <summary>
-        /// fav control.
+        /// emptyMessage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor fav;
-
-        /// <summary>
-        /// history control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor history;
-
-        /// <summary>
-        /// rptBook control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptBook;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl emptyMessage;
     }
 }

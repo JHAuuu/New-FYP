@@ -5,6 +5,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="HeadContent" runat="server">
     <link rel="stylesheet" href="assets/css/loanDetail.css" />
+            <link rel="stylesheet" href="assets/css/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
     <!--Body Content-->
@@ -81,13 +82,29 @@
             <div class="info-item">
             </div>
 
+            <div class="info-item">
              <asp:Panel ID="pnlComment" runat="server" Visible="false">
-                <div class="info-item">
+                
                     <h5>Do you want to comment?</h5>
                     <button  onclick="window.location.href = 'Comment.aspx?bookId=<%= GetBookId() %>&loanId=<%= loanId.ToString() %>';">Comment</button>
-                </div>
+                
             </asp:Panel>
+                </div>
 
+            <div class="info-item">
+            </div>
+
+            <div class="info-item">
+            </div>
+
+            <div class="info-item">
+            <asp:Panel ID="pnlExtendDate" runat="server" Visible="false">
+                
+                    <h5>Do you want to Extend for one more week?</h5>
+                    <button onclick="extendDate('<%= loanId.ToString() %>')">Extend Now</button>
+                
+            </asp:Panel>
+                </div>
 
         </div>
     </section>
@@ -101,8 +118,42 @@
     <script src="assets/js/browser.min.js"></script>
     <script src="assets/js/breakpoints.min.js"></script>
     <script src="assets/js/util.js"></script>
-
+                <script src="assets/js/sweetalert2/sweetalert2.min.js"></script>
     <script>
+
+        function extendDate(loanId) {
+
+            // AJAX to check trust level
+            $.ajax({
+                url: 'LoanDetail.aspx/ExtendDate',
+                type: 'POST',
+                data: JSON.stringify({ loanId: loanId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.d === "SUCCESS") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Date Extended',
+                            text: 'You have extended successfully',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            // Reload the page after the success message is closed
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Loan Failed',
+                            text: response.d,
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                }
+            });
+        }
+
+
         document.addEventListener("DOMContentLoaded", function () {
             const btnUp = document.getElementById("btnRecommendUp");
             const btnDown = document.getElementById("btnRecommendDown");

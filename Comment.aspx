@@ -31,7 +31,10 @@
         <div class="comment-container">
             <textarea id="comment-box" placeholder="Leave your comment here..."><%= rateComment %></textarea>
             <button class="submit-btn" id="submit-btn">Submit</button>
-            <button class="cancel-btn" id="cancel-btn" onclick="window.location.href='BookDetail.html'" >Cancel</button>
+            <form runat="server">
+            <asp:Button class="cancel-btn" ID="cancelbtn"  
+                                    runat="server" Text="Cancel" OnClick="btnRedirect_Click" />
+                </form>
         </div>
     </div>
     </body>

@@ -39,6 +39,17 @@
     position: relative;
 }
 
+p {
+ display: -webkit-box;          /* Enable a flexible box layout */
+    -webkit-line-clamp: 3;        /* Number of lines to display */
+    -webkit-box-orient: vertical; /* Vertical box orientation */
+    overflow: hidden;             /* Hide the overflowed text */
+    text-overflow: ellipsis;      /* Add "..." for truncated text */
+    height: calc(1.5em * 3);      /* Adjust height based on line count (1.5em x number of lines) */
+    line-height: 1.5em;           /* Set consistent line height */
+    max-height: calc(1.5em * 3);
+}
+
 /* Close button */
 .close {
     position: absolute;
@@ -77,22 +88,23 @@
     opacity: 0.8;
 }
 
-.notification-circle {
-  display: flex; /* Use flexbox to align content */
-  align-items: center; /* Center content vertically */
-  justify-content: center; /* Center content horizontally */
-  background-color: #ff0000; /* Red background */
-  color: #ffffff; /* White text */
-  border-radius: 50%; /* Make the element circular */
-  width: 20px; /* Circle size */
-  height: 20px; /* Circle size */
-  font-size: 12px; /* Adjust text size */
-  font-weight: bold; /* Optional: Bold text */
-  position: absolute; /* Position relative to the <a> */
-  top: 50%; /* Position vertically */
-  right: -25px; /* Move it to the right of the text */
-  transform: translateY(-50%); /* Center the circle vertically with the text */
-}
+  .circle {
+    width: 30px;          /* Smaller width */
+    height: 30px;         /* Smaller height */
+    border-radius: 50%;   /* Makes the div a circle */
+    background-color: #ff0000;
+    display: flex;
+    justify-content: center; /* Center the number horizontally */
+    align-items: center;    /* Center the number vertically */
+    font-size: 16px;        /* Smaller font size */
+    color: #ffffff;
+  }
+
+  .hidden {
+    display: none;              /* Hide the circle when the count is 0 */
+  }
+
+
 
 	</style>
 </head>
@@ -124,10 +136,12 @@
 							<li>
 								<a href="#" onclick="checkLogin()">Account</a>
 								<ul id="AccDropdown" runat="server">
-                                     <li><a href="Announcement.aspx" style="position: relative; display: inline-flex;">Inbox & 
+                                     <li>                                 <div class="circle <%= getNotiCount() == 0 ? "hidden" : "" %>">
+  <%= getNotiCount() %>
+</div><a href="Announcement.aspx" style="position: relative; display: inline-flex; align-items: center;">Inbox & 
                                 Announcement 
-                                <span id="notificationCircle" class="notification-circle" 
-                                    style="<%# (getNotiCount() > 0 ? "display: flex;" : "display: none;") %>"><%=getNotiCount() %></span>
+
+
                                 </a></li>
 									<li id="DashDropdown" runat="server"><a href="DashManagement.aspx">DashBoard</a></li>
 									<li><a href="FavouriteGroup.aspx" id="fav" runat="server">Favourite Books</a></li>
@@ -155,62 +169,18 @@
 			<!-- Carousel -->
 				<section class="carousel">
 					<div class="reel">
-
-						<article>
-							<a href="#" class="image featured"><img src="images/bookimg.png" alt="" /></a>
+                        <asp:Repeater runat="server" ID="rptBook">
+                            <ItemTemplate>
+                                <article >
+							<a href="BookDetail.aspx?bookid=<%# Eval("BookId") %>" class="image featured"><img src="<%# Eval("BookImage")!=DBNull.Value ? fyp.ImageHandler.GetImage((byte[])Eval("BookImage")): "images/defaultCoverBook.png" %>" alt="" /></a>
 							<header>
-								<h3><a href="#">Fundamental of Internet of Things</a></h3>
+								<h3><a href="BookDetail.aspx?BookId=<%# Eval("BookId") %>"><%# Eval("BookTitle") %></a></h3>
 							</header>
-							<p>Commodo id natoque malesuada sollicitudin elit suscipit magna.</p>
+							<p class="truncate"><%# Eval("BookDesc") %></p>
 						</article>
 
-						<article>
-							<a href="#" class="image featured"><img src="images/bookimg2.jpg" alt="" /></a>
-							<header>
-								<h3><a href="#">Fundamental of Software Architecture</a></h3>
-							</header>
-							<p>Commodo id natoque malesuada sollicitudin elit suscipit magna.</p>
-						</article>
-
-						<article>
-							<a href="#" class="image featured"><img src="images/bookimg3.jpg" alt="" /></a>
-							<header>
-								<h3><a href="#">Fundamental of Software Engineering</a></h3>
-							</header>
-							<p>Commodo id natoque malesuada sollicitudin elit suscipit magna.</p>
-						</article>
-
-						<article>
-							<a href="#" class="image featured"><img src="images/bookimg4.jpg" alt="" /></a>
-							<header>
-								<h3><a href="#">Fundamental of Web Development</a></h3>
-							</header>
-							<p>Commodo id natoque malesuada sollicitudin elit suscipit masdasddwewagna.</p>
-						</article>
-
-						<article>
-							<a href="#" class="image featured"><img src="images/bookimg5.jpg" alt="" /></a>
-							<header>
-								<h3><a href="#">The Essential Guide to User Interface Design</a></h3>
-							</header>
-							<p>Commodo id natoque malesuada sollicitudin elit suscipit magna.</p>
-						</article>
-
-						<article>
-							<a href="#" class="image featured"><img src="images/bookimg6.jpg" alt="" /></a>
-							<header>
-								<h3><a href="#">Developing User Interface</a></h3>
-							</header>
-							<p>Commodo id natoque malesuada sollicitudin elit suscipit magna.</p>
-						</article>
-
-						<article>
-							<a href="#" class="image featured"><img src="images/bookimg7.jpg" alt="" /></a>
-							<header>
-								<h3><a href="#">Blockchain Basics</a></h3>
-							</header>
-							<p>Commodo id natoque malesuada sollicitudin elit suscipit magna.</p>
-						</article>
+                            </ItemTemplate>
+                        </asp:Repeater>
 
 	
 					</div>
@@ -426,7 +396,7 @@
              //       window.location.href = '/error/403Forbidden.aspx'; // Redirect to a 403 Forbidden error page
                 } else {
                     // Redirect to the profile page if authenticated and role is valid
-                    window.location.href = 'profile.aspx';
+                    window.location.href = 'Recommendation.aspx';
                 }
             }
 		}
@@ -456,7 +426,7 @@
                    // window.location.href = '/error/403Forbidden.aspx'; // Redirect to a 403 Forbidden error page
                 } else {
                     // Redirect to the profile page if authenticated and role is valid
-                    window.location.href = 'profile.aspx';
+                    window.location.href = 'LoanList.aspx';
                 }
             }
         }

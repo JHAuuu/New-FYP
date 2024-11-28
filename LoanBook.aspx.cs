@@ -304,6 +304,12 @@ AND Status = 'loaning';
                 return $"An error occurred: {ex.Message}";
             }
         }
+
+        protected void btnRedirect_Click(object sender, EventArgs e)
+        {
+            // Redirect to LoanList.aspx
+            Response.Redirect("LoanList.aspx");
+        }
     }
 
 }

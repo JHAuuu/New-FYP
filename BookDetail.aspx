@@ -53,11 +53,15 @@
                 <section>
                     <div class="comment-section">
                         <div class="comment-box">
-                            <a href="comment.html">Add Comment...</a>
                         </div>
+                        <asp:Panel runat="server" ID="pnlComment" Visible="false">
+                            <div class="col-8 no-data-message">
+                            <p>No Comment at the moment.</p>
+                        </div>
+                        </asp:Panel>
                        <asp:Repeater runat="server" ID="rptComment">
     <ItemTemplate>
-        <div class="comment">
+        <div class="comment" data-comment-id='<%# Eval("RateDate") + "_" + Eval("PatronId") %>'>
             <div class="star-rating">
                 <!-- Dynamically add the active class based on RateStarts -->
                 <span class="star <%# Convert.ToInt32(Eval("RateStarts").ToString()) >= 1 ? "active" : "" %>" data-value="1">&#9733;</span>
@@ -78,7 +82,8 @@
             <asp:PlaceHolder runat="server" Visible='<%# Eval("PatronId").ToString() == CurrentUserPatronId.ToString() %>'>
                 <div class="user-cmt cmt">
                     <div class="edit-cmt cmt"><a href="Comment.aspx?bookId=<%= bookid.ToString() %>&date=<%# Eval("RateDate") %>">Edit</a></div>
-                    <div class="dlt-cmt cmt"><a href="#">Delete</a></div>
+                    <div class="dlt-cmt cmt">
+                        <a onclick="deleteComment('<%= bookid.ToString() %>', '<%# Eval("PatronId") %>', '<%# Eval("RateDate") %>')">Delete</a></div>
                 </div>
             </asp:PlaceHolder>
         </div>
@@ -98,11 +103,16 @@
                     <h3><a href="#">More others related books</a></h3>
                 </header>
                 <div class="row gtr-50">
+                    <asp:Panel runat="server" ID="pnlRelatedBook" Visible="false">
+                            <div class="col-8 no-data-message">
+                            <p>No Related Book at the moment.</p>
+                        </div>
+                        </asp:Panel>
                     <asp:Repeater runat="server" ID="rptRelatedBook">
                         <ItemTemplate>
                             <div class="col-8">
                         <a href="BookDetail.aspx?bookid=<%# Eval("BookId") %>" class="image fit">
-                            <img src="<%# Eval("BookImage") %>" alt="" width="100" height="300" /></a>
+                            <img src="<%# Eval("BookImage")!=DBNull.Value ? fyp.ImageHandler.GetImage((byte[])Eval("BookImage")): "images/defaultCoverBook.png" %>" alt="" width="100" height="300" /></a>
                         <h4><%# Eval("BookTitle") %></h4>
                     </div>  
                         </ItemTemplate>
@@ -265,6 +275,48 @@
             });
         }
 
+        function deleteComment(bookId, patronId, date) {
+            $.ajax({
+                url: 'BookDetail.aspx/DeleteComment',
+                type: 'POST',
+                data: JSON.stringify({ bookId: bookId, patronId: patronId, date:date }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.d === "SUCCESS") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Comment Deleted',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#3498db'
+                        }).then(() => {
+                            // Combine RateDate and PatronId to match the 'data-comment-id' format
+                            var commentId = date + "_" + patronId;
+
+                            // Find the comment container using the combined 'data-comment-id' and remove it
+                            $('.comment[data-comment-id="' + commentId + '"]').remove();
+                        });;
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.d || 'An error occurred while delete your comment.',
+                            confirmButtonText: 'Try Again',
+                            confirmButtonColor: '#e67e22'
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Failed to delete your comment. Please try again.',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#e67e22'
+                    });
+                }
+            });
+        }
 
 
         function AddDefaultly() {

@@ -14,7 +14,6 @@
 		.modal {
     display: none; /* Hidden by default */
     position: fixed;
-    z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
@@ -73,22 +72,23 @@
     opacity: 0.8;
 }
 
-.notification-circle {
-  display: flex; /* Use flexbox to align content */
-  align-items: center; /* Center content vertically */
-  justify-content: center; /* Center content horizontally */
-  background-color: #ff0000; /* Red background */
-  color: #ffffff; /* White text */
-  border-radius: 50%; /* Make the element circular */
-  width: 20px; /* Circle size */
-  height: 20px; /* Circle size */
-  font-size: 12px; /* Adjust text size */
-  font-weight: bold; /* Optional: Bold text */
-  position: absolute; /* Position relative to the <a> */
-  top: 50%; /* Position vertically */
-  right: -25px; /* Move it to the right of the text */
-  transform: translateY(-50%); /* Center the circle vertically with the text */
-}
+
+  .circle {
+    width: 30px;          /* Smaller width */
+    height: 30px;         /* Smaller height */
+    border-radius: 50%;   /* Makes the div a circle */
+    background-color: #ff0000;
+    display: flex;
+    justify-content: center; /* Center the number horizontally */
+    align-items: center;    /* Center the number vertically */
+    font-size: 16px;        /* Smaller font size */
+    color: #ffffff;
+  }
+
+  .hidden {
+    display: none;              /* Hide the circle when the count is 0 */
+  }
+
 	</style>
 </head>
 <body class="left-sidebar is-preload">
@@ -113,10 +113,12 @@
                     <li>
                         <a href="#" onclick="checkLogin()">Account</a>
                         <ul id="AccDropdown" runat="server">
-                             <li><a href="Announcement.aspx" style="position: relative; display: inline-flex;">Inbox & 
+                             <li>                                 <div class="circle <%= getNotiCount() == 0 ? "hidden" : "" %>">
+  <%= getNotiCount() %>
+</div><a href="Announcement.aspx" style="position: relative; display: inline-flex; align-items: center;">Inbox & 
                                 Announcement 
-                                <span id="notificationCircle" class="notification-circle" 
-                                    style="<%# (getNotiCount() > 0 ? "display: flex;" : "display: none;") %>"><%=getNotiCount() %></span>
+
+
                                 </a></li>
 							<li id="DashDropdown" runat="server"><a href="DashManagement.aspx">DashBoard</a></li>
 									<li id="fav" runat="server"><a href="FavouriteGroup.aspx" >Favourite Books</a></li>
