@@ -366,6 +366,8 @@
     <Content Include="Scripts\jquery.signalR-2.4.3.js" />
     <Content Include="Scripts\jquery.signalR-2.4.3.min.js" />
     <Content Include="StaffManagement.aspx" />
+    <Content Include="UserHistory.aspx" />
+    <Content Include="UserLoanDetail.aspx" />
     <Content Include="UsersManagement.aspx" />
     <Content Include="UserTrustManagement.aspx" />
     <Content Include="Web.config" />
@@ -637,6 +639,20 @@
     </Compile>
     <Compile Include="Recommendation.aspx.designer.cs">
       <DependentUpon>Recommendation.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UserHistory.aspx.cs">
+      <DependentUpon>UserHistory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UserHistory.aspx.designer.cs">
+      <DependentUpon>UserHistory.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UserLoanDetail.aspx.cs">
+      <DependentUpon>UserLoanDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UserLoanDetail.aspx.designer.cs">
+      <DependentUpon>UserLoanDetail.aspx</DependentUpon>
     </Compile>
     <Compile Include="UserPage.cs">
       <SubType>ASPXCodeBehind</SubType>

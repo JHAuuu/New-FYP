@@ -159,11 +159,12 @@
                 transition: 300ms;
             }
 
-            .action-button {
-        margin-right: 5px; /* Add a 5px gap between buttons */
-        display: inline-block; /* Ensure they stay inline */
-    }
-            .education-level-dropdown {
+        .action-button {
+            margin-right: 5px; /* Add a 5px gap between buttons */
+            display: inline-block; /* Ensure they stay inline */
+        }
+
+        .education-level-dropdown {
             margin-bottom: 20px;
             width: 100%;
             padding: 10px;
@@ -185,6 +186,11 @@
                 border-color: #66afe9;
                 outline: none;
             }
+
+                    .error-message {
+            color: #FFA500; /* Change to #FF6666 for light red */
+            font-size: 14px;
+        }
     </style>
 
     <h3>User list</h3>
@@ -205,26 +211,97 @@
 
                 <asp:Label ID="lblErrorMessage" runat="server" ForeColor="Red" CssClass="error-message"></asp:Label>
 
-                <asp:Label ID="lblUserName" runat="server" AssociatedControlID="txtUserName" Text="User Name:" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtUserName" runat="server" Placeholder="User Name" CssClass="input-field" /><br />
-                <asp:Label ID="lblUserAddress" runat="server" AssociatedControlID="txtUserAddress" Text="User Address:" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtUserAddress" runat="server" Placeholder="User Address" CssClass="input-field" /><br />
-                <asp:Label ID="lblUserEmail" runat="server" AssociatedControlID="txtUserEmail" Text="User Email:" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtUserEmail" runat="server" Placeholder="User Email" CssClass="input-field" /><br />
-                <label class="education-level">Education Level</label>
-            <asp:RequiredFieldValidator ID="rfvEducationLevel" runat="server" ControlToValidate="ddlEducationLevel" InitialValue="" ErrorMessage="*Please select an education level" CssClass="error-message" Display="Dynamic"></asp:RequiredFieldValidator><br />
-            <asp:DropDownList ID="ddlEducationLevel" runat="server" CssClass="education-level-dropdown">
-                <asp:ListItem Text="Diploma" Value="Diploma" />
-                <asp:ListItem Text="Degree" Value="Degree" />
-                <asp:ListItem Text="Master" Value="Master" />
-            </asp:DropDownList><br />
-                <asp:Label ID="lblUserPhoneNumber" runat="server" AssociatedControlID="txtUserPhoneNumber" Text="User Phone Number:" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtUserPhoneNumber" runat="server" Placeholder="User Phone Number" CssClass="input-field" /><br />
-                <asp:Label ID="lblUserPassword" runat="server" AssociatedControlID="txtUserPassword" Text="User Password:" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtUserPassword" runat="server" Placeholder="User Password" TextMode="Password" CssClass="input-field" /><br />
-                <br />
+                <!-- Username Field -->
+                <label for="txtUserName" class="form-label">Username</label>
+<asp:RequiredFieldValidator
+    ID="rfvName"
+    runat="server"
+    ControlToValidate="txtUserName"
+    ErrorMessage="*Username is required"
+    CssClass="error-message"
+    Display="Dynamic">
+</asp:RequiredFieldValidator>
+<asp:RegularExpressionValidator
+    ID="revUserName"
+    runat="server"
+    ControlToValidate="txtUserName"
+    ValidationExpression="^[a-zA-Z\s]{5,}$"
+    ErrorMessage="*Username must be at least 5 characters long, containing only letters and spaces, and no numbers or special characters"
+    CssClass="error-message"
+    Display="Dynamic">
+</asp:RegularExpressionValidator>
+<div class="input-box">
+    <asp:TextBox ID="txtUserName" runat="server" placeholder="Enter username" CssClass="input-field"></asp:TextBox>
+    <i class='bx bx-user'></i>
+</div>
 
-                <asp:Button ID="btnSubmitUser" runat="server" Text="Submit" CssClass="button" UseSubmitBehavior="false" OnClientClick="validateAndSubmitUser(); return false;" />
+                <!-- Address Field -->
+                <label for="txtAddress" class="form-label">Address</label>
+                <asp:RequiredFieldValidator ID="rfvAddress" runat="server" ControlToValidate="txtAddress" ErrorMessage="*Address is required" CssClass="error-message" Display="Dynamic"></asp:RequiredFieldValidator><br />
+                <div class="input-box">
+                    <asp:TextBox ID="txtAddress" runat="server" TextMode="MultiLine" placeholder="Enter your address" CssClass="input-field"></asp:TextBox>
+                    <i class='bx bx-map'></i>
+                </div>
+
+                <br />
+                <!-- Email Field -->
+                <label for="txtEmail" class="form-label">Email Address</label><asp:RequiredFieldValidator ID="rfvEmail" runat="server" ControlToValidate="txtEmail" ErrorMessage="*Email is required" CssClass="error-message" Display="Dynamic"></asp:RequiredFieldValidator>
+                <div class="input-box">
+                    <asp:TextBox ID="txtEmail" runat="server" TextMode="Email" placeholder="Enter email" CssClass="input-field"></asp:TextBox>
+                    <i class='bx bx-envelope'></i>
+                </div>
+                <asp:RegularExpressionValidator
+                    ID="revEmail"
+                    runat="server"
+                    ControlToValidate="txtEmail"
+                    ValidationExpression="^[^\s@]+@(student\.tarc\.edu\.my|tarc\.edu\.my)$"
+                    ErrorMessage="Invalid email format. Use @student.tarc.edu.my for students or @tarc.edu.my for teachers."
+                    CssClass="error-message"
+                    Display="Dynamic" /><br />
+
+                <!-- Education Level Field -->
+                <label class="education-level" id="lblEducationLevel" style="display: none;">Education Level</label>
+                <asp:RequiredFieldValidator
+                    ID="rfvEducationLevel"
+                    runat="server"
+                    ControlToValidate="ddlEducationLevel"
+                    InitialValue=""
+                    ErrorMessage="*Please select an education level"
+                    CssClass="error-message"
+                    Display="Dynamic"
+                    Style="display: none;" />
+                <br />
+                <asp:DropDownList
+                    ID="ddlEducationLevel"
+                    runat="server"
+                    CssClass="education-level-dropdown"
+                    Style="display: none;">
+                    <asp:ListItem Text="Diploma" Value="Diploma" />
+                    <asp:ListItem Text="Degree" Value="Degree" />
+                    <asp:ListItem Text="Master" Value="Master" />
+                </asp:DropDownList>
+
+                <!-- Phone Number Field -->
+                <label for="txtPhone" class="form-label">Phone Number</label>
+                <asp:RequiredFieldValidator ID="rfvPhone" runat="server" ControlToValidate="txtPhone" ErrorMessage="*Phone number is required" CssClass="error-message" Display="Dynamic"></asp:RequiredFieldValidator>
+                <div class="input-box">
+                    <asp:TextBox ID="txtPhone" runat="server" TextMode="Phone" placeholder="Enter phone number" CssClass="input-field"></asp:TextBox>
+                    <i class='bx bx-phone'></i>
+                </div>
+                <asp:RegularExpressionValidator ID="revPhone" runat="server" ControlToValidate="txtPhone"
+                    ValidationExpression="^(01[0-9]{8,9})$" ErrorMessage="Invalid phone number format. Must start with 01 and be 10 or 11 digits."
+                    CssClass="error-message" Display="Dynamic" /><br />
+
+                <!-- Password Field -->
+                <label for="newPass" class="form-label">Password</label>
+                <asp:RequiredFieldValidator ID="rfvNewPass" runat="server" ControlToValidate="txtUserPassword" ErrorMessage="*Password is required" CssClass="error-message" Display="Dynamic"></asp:RequiredFieldValidator>
+                <div class="input-box">
+                    <asp:TextBox ID="txtUserPassword" runat="server" TextMode="Password" placeholder="Enter new password" CssClass="input-field"></asp:TextBox>
+                    <i class="fa-solid fa-eye-slash" id="toggleNewPass"></i>
+                </div>
+                <asp:RegularExpressionValidator ID="revNewPass" runat="server" ControlToValidate="txtUserPassword" ValidationExpression=".{6,}" ErrorMessage="Password must be at least 6 characters" CssClass="error-message" Display="Dynamic"></asp:RegularExpressionValidator><br />
+
+                <asp:Button ID="btnSubmitUser" runat="server" Text="Submit" CssClass="button" UseSubmitBehavior="false" OnClick="btnSubmitUser_Click" />
             </div>
         </div>
     </div>
@@ -258,10 +335,10 @@ WHERE
             <asp:BoundField DataField="UserPhoneNumber" HeaderText="Phone Number" SortExpression="UserPhoneNumber" />
 
             <asp:TemplateField HeaderText="Barcode">
-                            <ItemTemplate>
-                                <asp:Button ID="btnDownloadBarcode" runat="server" Text="Download User's QRcode" CssClass="barcode-button"
-                                    CommandName="DownloadBarcode" CommandArgument='<%# Eval("UserId") %>' CausesValidation="false" />
-                            </ItemTemplate>
+                <ItemTemplate>
+                    <asp:Button ID="btnDownloadBarcode" runat="server" Text="Download User's QRcode" CssClass="barcode-button"
+                        CommandName="DownloadBarcode" CommandArgument='<%# Eval("UserId") %>' CausesValidation="false" />
+                </ItemTemplate>
             </asp:TemplateField>
 
             <asp:TemplateField HeaderText="Action">
@@ -298,6 +375,31 @@ WHERE
     </div>
     <asp:HiddenField ID="hfUserId" runat="server" />
     <script>
+        document.getElementById("<%= txtEmail.ClientID %>").addEventListener("input", function () {
+            const email = this.value.trim();
+            const eduLevelLabel = document.getElementById("lblEducationLevel");
+            const eduLevelDropdown = document.getElementById("<%= ddlEducationLevel.ClientID %>");
+            const eduLevelValidator = document.getElementById("<%= rfvEducationLevel.ClientID %>");
+
+            // Check if email belongs to a student
+            if (email.endsWith("@student.tarc.edu.my")) {
+                // Show the education level fields
+                eduLevelLabel.style.display = "block";
+                eduLevelDropdown.style.display = "block";
+                eduLevelValidator.style.display = "block";
+                eduLevelValidator.enabled = true; // Enable validator for students
+            } else {
+                // Hide the education level fields
+                eduLevelLabel.style.display = "none";
+                eduLevelDropdown.style.display = "none";
+                eduLevelValidator.style.display = "none";
+                eduLevelValidator.enabled = false; // Disable validator for teachers
+
+                // Clear any selected value in the dropdown
+                eduLevelDropdown.value = "";
+            }
+        });
+
         // Show the inbox modal with the userId parameter
         function showInboxModal(userId) {
             console.log("Modal triggered with UserId:", userId);
@@ -365,37 +467,12 @@ WHERE
 
         function validateAndSubmitUser() {
             const userName = document.getElementById('<%= txtUserName.ClientID %>').value;
-            const userAddress = document.getElementById('<%= txtUserAddress.ClientID %>').value;
-            const userEmail = document.getElementById('<%= txtUserEmail.ClientID %>').value;
-            const educationLevel = document.getElementById('<%= ddlEducationLevel.ClientID %>').value;
-            const userPhoneNumber = document.getElementById('<%= txtUserPhoneNumber.ClientID %>').value;
+            const userAddress = document.getElementById('<%= txtAddress.ClientID %>').value;
+            const userEmail = document.getElementById('<%= txtEmail.ClientID %>').value;
+            const userPhoneNumber = document.getElementById('<%= txtPhone.ClientID %>').value;
             const userPassword = document.getElementById('<%= txtUserPassword.ClientID %>').value;
-
-            // Validate All Fields Are Not Empty
-            if (!userName || !userAddress || !userEmail || !userPhoneNumber || !userPassword) {
-                document.getElementById('<%= lblErrorMessage.ClientID %>').innerText = "All fields are required and cannot be empty.";
-                return;
-            } else {
-                // Validate Username
-                if (userName.length < 3) {
-                    document.getElementById('<%= lblErrorMessage.ClientID %>').innerText = "Username must be at least 3 characters long.";
-                    return;
-                }
-
-                // Validate Email Format
-                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple regex for email validation
-                if (!emailPattern.test(userEmail)) {
-                    document.getElementById('<%= lblErrorMessage.ClientID %>').innerText = "Please enter a valid email address.";
-                    return;
-                }
-
-                // Validate Phone Number (Malaysian format)
-                const phonePattern = /^(01[0-9]{8,9})$/; // Matches Malaysian phone numbers starting with 01 followed by 7 to 9 digits
-                if (!phonePattern.test(userPhoneNumber)) {
-                    document.getElementById('<%= lblErrorMessage.ClientID %>').innerText = "Phone number must match Malaysian format (e.g., 0192485083 or 01155005083).";
-                    return;
-                }
-            }
+            // Get the value of the education level dropdown
+            const educationLevel = educationLevelDropdown.style.display === "none" ? null : educationLevelDropdown.value;
 
             fetch('UsersManagement.aspx/CheckUserExistsAndInsertUser', {
                 method: 'POST',

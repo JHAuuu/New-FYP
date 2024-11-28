@@ -387,7 +387,7 @@ namespace fyp
                 }
 
                 return new Result { Success = true, Message = "Inbox message sent successfully!" };
-                
+
             }
             catch (Exception ex)
             {

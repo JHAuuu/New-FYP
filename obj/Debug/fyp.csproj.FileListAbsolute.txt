@@ -395,7 +395,6 @@ D:\Source\repos\FYP-1a056921608aef66736e8ae0a6941d1c2c3401a7\FYP-1a056921608aef6
 D:\Source\repos\FYP-1a056921608aef66736e8ae0a6941d1c2c3401a7\FYP-1a056921608aef66736e8ae0a6941d1c2c3401a7\bin\zxing.xml
 D:\Source\repos\FYP-1a056921608aef66736e8ae0a6941d1c2c3401a7\FYP-1a056921608aef66736e8ae0a6941d1c2c3401a7\bin\zxing.presentation.xml
 D:\Source\repos\FYP-1a056921608aef66736e8ae0a6941d1c2c3401a7\FYP-1a056921608aef66736e8ae0a6941d1c2c3401a7\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-D:\Source\repos\FYP-1a056921608aef66736e8ae0a6941d1c2c3401a7\FYP-1a056921608aef66736e8ae0a6941d1c2c3401a7\obj\Debug\fyp.csproj.AssemblyReference.cache
 D:\Source\repos\FYP-1a056921608aef66736e8ae0a6941d1c2c3401a7\FYP-1a056921608aef66736e8ae0a6941d1c2c3401a7\obj\Debug\fyp.csproj.CoreCompileInputs.cache
 D:\Source\repos\FYP-1a056921608aef66736e8ae0a6941d1c2c3401a7\FYP-1a056921608aef66736e8ae0a6941d1c2c3401a7\obj\Debug\fyp.csproj.CopyComplete
 D:\Source\repos\FYP-1a056921608aef66736e8ae0a6941d1c2c3401a7\FYP-1a056921608aef66736e8ae0a6941d1c2c3401a7\obj\Debug\fyp.dll
